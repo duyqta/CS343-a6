@@ -1,0 +1,60 @@
+#include <sys/types.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "config.h"
+#include "MPRNG.h"
+using namespace std;				// direct access to std
+#include <cstdlib>					// exit
+
+MPRNG mprng;
+
+bool convert( int & val, char * buffer ) {		// convert C string to integer
+    std::stringstream ss( buffer );			// connect stream and buffer
+    string temp;
+    ss >> dec >> val;					// convert integer from buffer
+    return ! ss.fail() &&				// conversion successful ?
+	! ( ss >> temp );				// characters after conversion all blank ?
+} // convert
+
+int main( int argc, char * argv[] ) {
+    // MUST BE INT (NOT UNSIGNED) TO CORRECTLY TEST FOR NEGATIVE VALUES
+    int seed = getpid();					// default value
+    //char * configName;		// default value
+    char defaultFile[] = "soda.config";
+
+
+    try {
+	switch ( argc ) {
+	  case 3:
+		if ( ! convert( seed, argv[2] ) || seed <= 0 ) throw 1; // invalid ?
+	    // FALL THROUGH
+	  case 2:
+	    // FALL THROUGH
+	  case 1:					// defaults
+	    break;
+	  default:					// wrong number of options
+	    throw 1;
+	} // switch
+    } catch( ... ) {
+	cerr << "Usage: " << argv[0]
+	     << " [ config-file [ random-seed (> 0) ] ]" << endl;
+	exit( EXIT_FAILURE );				// TERMINATE
+    } // try
+
+	mprng.set_seed(seed);
+
+	ConfigParms cparms;
+	if (argc >= 2) {
+		processConfigFile(argv[1], cparms);
+	} else {
+		processConfigFile(defaultFile, cparms);
+	}
+
+	cout << "seed: " << seed << " numStudents: " << cparms.numStudents << endl;
+
+} // main
+
+// Local Variables: //
+// compile-command: "u++ uIO.cc" //
+// End: //

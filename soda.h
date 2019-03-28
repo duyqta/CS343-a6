@@ -15,6 +15,8 @@ void processConfigFile( const char * configFile, ConfigParms & cparms );
 
 _Task Student {
 	void main();
+	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftFree = 'a', 
+			Bought = 'B', BoughtFree = 'A', Lost = 'L', Finished = 'F' };
   public:
 	Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases );
@@ -40,6 +42,7 @@ _Task WATCardOffice {
 	_Task Courier { ... };					// communicates with bank
 
 	void main();
+	enum States { Start = 'S', RequestWork = 'W', CreateCall = 'C', TransferCall = 'T', Finished = 'F' };
   public:
 	_Event Lost {};							// lost WATCard
 	WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers );
@@ -57,12 +60,14 @@ _Monitor Bank {
 
 _Task Parent {
 	void main();
+	enum States { Start = 'S', Deposit = 'D', Finished = 'F' };
   public:
 	Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay );
 };
 
 _Task Groupoff {
 	void main();
+	enum States { Start = 'S', Deposit = 'D', Finished = 'F' };
   public:
 	Groupoff( Printer & prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay );
 	WATCard::FWATCard giftCard();
@@ -70,6 +75,7 @@ _Task Groupoff {
 
 _Task VendingMachine {
 	void main();
+	enum States { Start = 'S', Reloading = 'r', CompleteReloading = 'R', Bought = 'B', Finished = 'F' };
   public:
 	enum Flavours { ... }; 				// flavours of soda (YOU DEFINE)
 	_Event Free {};						// free, advertisement
@@ -85,6 +91,7 @@ _Task VendingMachine {
 
 _Task NameServer {
 	void main();
+	enum States { Start = 'S', Register = 'R', NewVending = 'N', Finished = 'F' };
   public:
 	NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents );
 	void VMregister( VendingMachine * vendingmachine );
@@ -94,6 +101,7 @@ _Task NameServer {
 
 _Task BottlingPlant {
 	void main();
+	enum States { Start = 'S', Generate = 'G', PickedUp = 'P', Finished = 'F' };
   public:
 	_Event Shutdown {};					// shutdown plant
 	BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
@@ -104,12 +112,25 @@ _Task BottlingPlant {
 
 _Task Truck {
 	void main();
+	enum States { Start = 'S', PickUp = 'P', Delivery = 'd', Unsuccess = 'U',
+			EndDelivery = 'D', Finished = 'F' };
   public:
 	Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
 		   unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
 };
 
-_Monitor / _Cormonitor Printer {
+// Class for info needed to be output by each voter
+struct Info {
+    bool flushed = true;
+    char state;
+    int value1, value2;
+    unsigned int lid;
+};
+
+_Monitor Printer {    // chose one of the two kinds of type constructor
+    int voters, numOfInput;
+    std::vector< Info* > outputArr;
+    void flush(); // Call this function to output current line
   public:
 	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
 	Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );

@@ -20,9 +20,7 @@ bool convert( int & val, char * buffer ) {		// convert C string to integer
 int main( int argc, char * argv[] ) {
     // MUST BE INT (NOT UNSIGNED) TO CORRECTLY TEST FOR NEGATIVE VALUES
     int seed = getpid();					// default value
-    //char * configName;		// default value
     char defaultFile[] = "soda.config";
-
 
     try {
 	switch ( argc ) {
@@ -53,8 +51,34 @@ int main( int argc, char * argv[] ) {
 
 	cout << "seed: " << seed << " numStudents: " << cparms.numStudents << endl;
 
-} // main
+	// Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
+	// Bank bank(cparms.numStudents);
+	// Parent parent(printer, bank, cparms.numStudents, cparms.parentalDelay);
+	// WATCardOffice office(printer, bank, cparms.numCouriers);
+	// Groupoff groupoff(printer, cparms.numStudents, cparms.sodaCost, cparms.groupoffDelay);
+	// NameServer nameServer(printer, cparms.numVendingMachines, cparms.numStudents);
 
-// Local Variables: //
-// compile-command: "u++ uIO.cc" //
-// End: //
+	// VendingMachine * machines[cparms.numVendingMachines];
+	// for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
+	// 	machines[i] = new VendingMachine(printer, nameServer, i, cparms.sodaCost);
+	// }
+
+
+	// BottlingPlant plant(printer, nameServer, cparms.numVendingMachines,
+	// 					cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour,
+	// 					cparms.timeBetweenShipments);
+
+	// Student * students[cparms.numStudents];
+	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
+	// 	students[i] = new Student(printer, nameServer, office, groupoff, i, cparms.maxPurchases);
+	// }
+
+	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
+	// 	delete students[i];
+	// }
+	// plant.~BottlingPlant();
+	// for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
+	// 	delete machines[i];
+	// }
+
+} // main

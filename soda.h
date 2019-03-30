@@ -145,6 +145,13 @@ _Task Truck {
 };
 
 _Task Student {
+	Printer & printer;
+	NameServer & nameServer;
+	WATCardOffice & cardOffice;
+	Groupoff & groupoff;
+	unsigned int id, maxPurchases;
+	FWATCard watcard;
+	int numOfPurchases, favouriteFlavour;
 	void main();
 	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftFree = 'a', 
 			Bought = 'B', BoughtFree = 'A', Lost = 'L', Finished = 'F' };

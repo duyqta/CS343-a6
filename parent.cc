@@ -5,7 +5,7 @@ Parent::Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned i
 
 void Parent::main() {
     for ( ;; ) {
-        Accept ( ~Parent ) {
+        _Accept ( ~Parent ) {
             printer::print( Printer::Parent, Finished );
             break;
         } _Else {

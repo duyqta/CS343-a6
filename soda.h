@@ -8,19 +8,19 @@ extern MPRNG mprng;
 
 // Class for info needed to be output by each voter
 struct Info {
-  bool flushed = true;
+  	bool flushed = true;
 	bool value1Avail, value2Avail;
-  char state;
-  int value1, value2;
-  unsigned int lid;
+  	char state;
+  	int value1, value2;
+  	unsigned int lid;
 	void clear() { flushed = true; value1Avail = false; value2Avail = false; }
 };
 
 _Monitor Printer {    // chose one of the two kinds of type constructor
 	int numStudents, numVendingMachines, numCouriers, numOfInput;
 	const int outputSize;
-  std::vector< Info* > vOutput;
-  void flush(); // Call this function to output current line
+  	std::vector< Info* > vOutput;
+  	void flush(); // Call this function to output current line
   public:
 	enum Kind { Parent = 0, Groupoff = 1, WATCardOffice = 2, NameServer = 3, Truck = 4, 
 			BottlingPlant = 5, Student = 6, Vending, Courier };
@@ -32,7 +32,7 @@ _Monitor Printer {    // chose one of the two kinds of type constructor
 	void print( Kind kind, unsigned int lid, char state );
 	void print( Kind kind, unsigned int lid, char state, int value1 );
 	void print( Kind kind, unsigned int lid, char state, int value1, int value2 );
-	private:
+  private:
 	int getIndex( Kind kind, unsigned int lid );
 };
 

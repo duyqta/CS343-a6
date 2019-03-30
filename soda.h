@@ -20,15 +20,17 @@ _Monitor Printer {    // chose one of the two kinds of type constructor
   void flush(); // Call this function to output current line
   public:
 	enum Kind { Parent = 0, Groupoff = 1, WATCardOffice = 2, NameServer = 3, Truck = 4, 
-			BottlingPlant = 5, Student = 6, Vending, 
-			Courier };
+			BottlingPlant = 5, Student = 6, Vending, Courier };
 	Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );
+	~Printer();
 	void print( Kind kind, char state );
 	void print( Kind kind, char state, int value1 );
 	void print( Kind kind, char state, int value1, int value2 );
 	void print( Kind kind, unsigned int lid, char state );
 	void print( Kind kind, unsigned int lid, char state, int value1 );
 	void print( Kind kind, unsigned int lid, char state, int value1, int value2 );
+	private:
+	int getIndex( Kind kind, unsigned int lid );
 };
 
 _Monitor Bank {
@@ -113,6 +115,9 @@ _Task VendingMachine {
 };
 
 _Task BottlingPlant {
+	Printer & printer;
+	NameServer & nameServer;
+	unsigned int numVendingMachines, maxShippedPerFlavour, maxStockPerFlavour, timeBetweenShipments;
 	void main();
 	enum States { Start = 'S', Generate = 'G', PickedUp = 'P', Finished = 'F' };
   public:

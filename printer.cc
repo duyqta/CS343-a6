@@ -4,23 +4,22 @@ using namespace std;
 
 Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ):
         numStudents( numStudents ), numVendingMachines( numVendingMachines ), 
-        numCouriers( numCouriers ), numOfInput( 0 ), Vending( Student + numStudents ),
-        Courier( Vending + numVendingMachines ),
+        numCouriers( numCouriers ), numOfInput( 0 ),
         outputSize( 6 + numStudents + numVendingMachines + numCouriers ) {
     
     // Print the voter columns
     cout << "Parent\t" << "Gropoff\t" << "WATOff\t" << "Names\t"
          << "Truck\t" << "Plant";
     
-    for ( int i = 0; i < numStudents; i++ ) cout << "\tStud" << i;
-    for ( int i = 0; i < numVendingMachines; i++ ) cout << "\tMach" << i;
-    for ( int i = 0; i < numCouriers; i++ ) cout << "\tCour" << i;
+    for ( int i = 0; i < ( int ) numStudents; i++ ) cout << "\tStud" << i;
+    for ( int i = 0; i < ( int ) numVendingMachines; i++ ) cout << "\tMach" << i;
+    for ( int i = 0; i < ( int ) numCouriers; i++ ) cout << "\tCour" << i;
     cout << endl;
 
     // Print the dividing
     for (int i = 0; i < outputSize; i++){
 	    cout << "*******";
-	    if ( i < ((int) voters ) - 1 ) cout << "\t";
+	    if ( i < outputSize - 1 ) cout << "\t";
 	    vOutput.push_back( new Info() );
     }
     cout << endl;
@@ -32,8 +31,15 @@ Printer::~Printer(){
     cout << "***********************" << endl; 
 }
 
+int Printer::getIndex( Kind kind, unsigned int lid = 0 ) {
+    int index;
+    if ( kind == Vending ) index = Student + numStudents + ( int ) lid;
+    else if ( kind == Courier ) index = Student + numStudents + numVendingMachines + ( int ) lid;
+    else index = ( int ) kind + ( int ) lid;
+    return index;
+}
 void Printer::print( Kind kind, char state ) {
-    int index = ( int ) kind;
+    int index = getIndex( kind );
     if ( !vOutput[index]->flushed ) flush();
 
     numOfInput++;
@@ -41,21 +47,21 @@ void Printer::print( Kind kind, char state ) {
     vOutput[index]->flushed = false;
 }
 void Printer::print( Kind kind, char state, int value1 ) {
-    int index = ( int ) kind;
+    int index = getIndex( kind );
     print( kind, state );
     vOutput[index]->value1 = value1;
     vOutput[index]->value1Avail = true;
 }
 
 void Printer::print( Kind kind, char state, int value1, int value2 ) {
-    int index = ( int ) kind;
+    int index = getIndex( kind );
     print( kind, state, value1 );
     vOutput[index]->value2 = value2;
     vOutput[index]->value2Avail = true;
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state ) {
-    int index = (( int ) kind ) + (( int ) lid );
+    int index = getIndex( kind, lid );
     if ( !vOutput[index]->flushed ) flush();
 
     numOfInput++;
@@ -63,14 +69,14 @@ void Printer::print( Kind kind, unsigned int lid, char state ) {
     vOutput[index]->flushed = false;
 }
 void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
-    int index = (( int ) kind ) + (( int ) lid );
+    int index = getIndex( kind, lid );
     print( kind, lid, state );
     vOutput[index]->value1 = value1;
     vOutput[index]->value1Avail = true;
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state, int value1, int value2 ) {
-    int index = (( int ) kind ) + (( int ) lid );
+    int index = getIndex( kind, lid );
     print( kind, lid, state, value1 );
     vOutput[index]->value2 = value2;
     vOutput[index]->value2Avail = true;
@@ -84,7 +90,7 @@ void Printer::flush() {
 	        continue;
 	    }
 
-	    cout << vOutput[i]->state;	// Print out the state
+	    cout << it->state;	// Print out the state
 
 	    // The following prints out accompanying info with the states
 

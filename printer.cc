@@ -2,7 +2,10 @@
 #include "soda.h"
 using namespace std;
 
-Printer::Printer( unsigned int voters ): voters( voters ) {
+Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ):
+        numStudents( numStudents ), numVendingMachines( numVendingMachines ), 
+        numCouriers( numCouriers ), numOfInput( 0 ), 
+        outputSize( 6 + numStudents + numVendingMachines + numCouriers ) {
     
     // Print the voter columns
     cout << "Parent\t" << "Gropoff\t" << "WATOff\t" << "Names\t"
@@ -19,7 +22,6 @@ Printer::Printer( unsigned int voters ): voters( voters ) {
 	    if ( i < ((int) voters ) - 1 ) cout << "\t";
 	    vOutput.push_back( new Info() );
     }
-    numOfInput = 0;
     cout << endl;
 }
 

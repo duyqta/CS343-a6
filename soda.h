@@ -12,8 +12,8 @@ struct Info {
 };
 
 _Monitor Printer {    // chose one of the two kinds of type constructor
-	const int outputSize = 6 + numStudents + numVendingMachines + numCouriers;
-  int numOfInput;
+	int numStudents, numVendingMachines, numCouriers, numOfInput;
+	const int outputSize;
   std::vector< Info* > vOutput;
   void flush(); // Call this function to output current line
   public:

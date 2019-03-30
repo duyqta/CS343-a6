@@ -122,17 +122,22 @@ _Task Truck {
 // Class for info needed to be output by each voter
 struct Info {
     bool flushed = true;
+		bool value1Avail, value2Avail;
     char state;
     int value1, value2;
     unsigned int lid;
+		void clear() { flushed = true; value1Avail = false; value2Avail = false; }
 };
 
 _Monitor Printer {    // chose one of the two kinds of type constructor
-    int voters, numOfInput;
-    std::vector< Info* > outputArr;
+		const int outputSize = 6 + numStudents + numVendingMachines + numCouriers;
+    int numOfInput;
+    std::vector< Info* > vOutput;
     void flush(); // Call this function to output current line
   public:
-	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
+	enum Kind { Parent = 0, Groupoff = 1, WATCardOffice = 2, NameServer = 3, Truck = 4, 
+							BottlingPlant = 5, Student = 6, Vending = Student + numStudents, 
+							Courier = Vending + numVendingMachines };
 	Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );
 	void print( Kind kind, char state );
 	void print( Kind kind, char state, int value1 );

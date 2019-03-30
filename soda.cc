@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include "config.h"
+#include "soda.h"
 #include "MPRNG.h"
 using namespace std;				// direct access to std
 #include <cstdlib>					// exit

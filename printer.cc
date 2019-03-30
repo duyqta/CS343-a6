@@ -4,7 +4,8 @@ using namespace std;
 
 Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ):
         numStudents( numStudents ), numVendingMachines( numVendingMachines ), 
-        numCouriers( numCouriers ), numOfInput( 0 ), 
+        numCouriers( numCouriers ), numOfInput( 0 ), Vending( Student + numStudents ),
+        Courier( Vending + numVendingMachines ),
         outputSize( 6 + numStudents + numVendingMachines + numCouriers ) {
     
     // Print the voter columns

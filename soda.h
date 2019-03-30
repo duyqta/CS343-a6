@@ -99,6 +99,7 @@ _Task NameServer {
 };
 
 _Task VendingMachine {
+	static int numOfFlavours;
 	void main();
 	enum States { Start = 'S', Reloading = 'r', CompleteReloading = 'R', Bought = 'B', Finished = 'F' };
   public:
@@ -114,10 +115,15 @@ _Task VendingMachine {
 	_Nomutex unsigned int getId() const;
 };
 
+extern int VendingMachine::numOfFlavours;
+
 _Task BottlingPlant {
 	Printer & printer;
 	NameServer & nameServer;
+	Truck * truck;
 	unsigned int numVendingMachines, maxShippedPerFlavour, maxStockPerFlavour, timeBetweenShipments;
+	bool shutdown;
+	unsigned int flavourStock[VendingMachine::numOfFlavours];
 	void main();
 	enum States { Start = 'S', Generate = 'G', PickedUp = 'P', Finished = 'F' };
   public:

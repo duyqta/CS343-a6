@@ -1,6 +1,8 @@
 #include <vector>
 #include <uFuture.h>
 
+using namespace std;
+
 // Class for info needed to be output by each voter
 struct Info {
   bool flushed = true;
@@ -30,6 +32,7 @@ _Monitor Printer {    // chose one of the two kinds of type constructor
 };
 
 _Monitor Bank {
+	std::vector<unsigned int> accounts;
   public:
 	Bank( unsigned int numStudents );
 	void deposit( unsigned int id, unsigned int amount );

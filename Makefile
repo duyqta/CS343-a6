@@ -2,7 +2,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -multi -O2 -std=c++11 -Wall -Wextra -MMD # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS = soda.o config.o # list of object files
+OBJECTS = soda.o config.o bank.o printer.o # list of object files
 EXEC = soda
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"

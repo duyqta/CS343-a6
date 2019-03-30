@@ -28,6 +28,6 @@ void BottlingPlant::main() {
 void BottlingPlant::getShipment( unsigned int cargo[] ) {
     if ( shutdown ) _Throw Shutdown();
     for ( int i = 0; i < NUMFLAVOURS; i++ ) {
-        cargo[i] = std::move( flavourStock[i] );
+        std::swap( flavourStock[i], cargo[i] );
     }
 }

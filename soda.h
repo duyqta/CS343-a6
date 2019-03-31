@@ -140,6 +140,12 @@ _Task BottlingPlant {
 };
 
 _Task Truck {
+	Printer & printer;
+	NameServer & nameServer;
+	BottlingPlant & plant;
+	unsigned int machineId;
+	unsigned int numVendingMachines;
+	unsigned int maxStockPerFlavour;
 	void main();
 	enum States { Start = 'S', PickUp = 'P', Delivery = 'd', Unsuccess = 'U',
 			EndDelivery = 'D', Finished = 'F' };
@@ -154,7 +160,7 @@ _Task Student {
 	WATCardOffice & cardOffice;
 	Groupoff & groupoff;
 	unsigned int id, maxPurchases;
-	FWATCard watcard;
+	WATCard::FWATCard watcard;
 	int numOfPurchases, favouriteFlavour;
 	void main();
 	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftFree = 'a', 

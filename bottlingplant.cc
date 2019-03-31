@@ -12,13 +12,14 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
 
 void BottlingPlant::main() {
 	printer.print( Printer::BottlingPlant, BottlingPlant::Start );
+	for ( int i = 0; i < NUMFLAVOURS; i++ ) flavourStock[i] = 0;
     for ( ;; ) {
 		unsigned int generated = 0;
         for ( int i = 0; i < NUMFLAVOURS; i++ ) {
             flavourStock[i] += mprng( maxShippedPerFlavour );
 			generated += flavourStock[i];
         }
-		printer.print( Printer::BottlingPlant, BottlingPlant::Generate, generated );
+		printer.print( Printer::BottlingPlant, BottlingPlant::Generate, ( int ) generated );
 
         _Accept( ~BottlingPlant ) {
             shutdown = true;

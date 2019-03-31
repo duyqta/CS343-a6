@@ -18,7 +18,9 @@ void BottlingPlant::main() {
 
         _Accept( ~BottlingPlant ) {
             shutdown = true;
-            _Accept( getShipment );
+			try {
+            	_Accept( getShipment );
+			} catch ( uMutexFailure::RendezvousFailure & ) {}
             delete truck;
             break;
         } or _Accept( getShipment );

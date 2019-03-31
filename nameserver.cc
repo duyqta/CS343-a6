@@ -1,7 +1,6 @@
 #include "soda.h"
 #include <vector>
 
-
 void NameServer::main() {
 	// first allow all vending machines to register
 	while (machines.size() < numVendingMachines) _Accept(VMregister);
@@ -17,7 +16,7 @@ void NameServer::main() {
 NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents ) : 
 printer(prt), numVendingMachines(numVendingMachines) {
 	printer.print(Printer::Kind::NameServer, (char) States::Start);
-	machines = vector<VendingMachine *>(numVendingMachines);
+	machines = vector<VendingMachine *>();
 	assignedMachines = vector<unsigned int>(numStudents);
 	for (unsigned int i = 0; i < numStudents; i += 1) {
 		assignedMachines[i] = i % numVendingMachines;

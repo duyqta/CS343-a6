@@ -18,7 +18,7 @@ void Truck::main() {
 		}
 
 		int totalBottles = 0;
-		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId++ ) {
+		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
 			totalBottles += cargo[flavId];
 		}
 		printer.print(Printer::Kind::Truck, (char) States::PickUp, totalBottles);
@@ -28,12 +28,12 @@ void Truck::main() {
 
 			unsigned int * inventory = machines[machineId]->inventory();
 			int notReplenished = 0;
-			for ( int flavId = 0; flavId < NUMFLAVOURS; flavId++ ) {
+			for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
 	        	unsigned int numNeeded = maxStockPerFlavour - inventory[flavId];
 	        	unsigned int numSupplied;
 	        	if (numNeeded > cargo[flavId]) {
 	        		numSupplied = cargo[flavId];
-	        		notReplenished = numNeeded - cargo[flavId];
+	        		notReplenished += numNeeded - cargo[flavId];
 	        	} else {
 	        		numSupplied = numNeeded;
 	        	}
@@ -46,6 +46,11 @@ void Truck::main() {
 	    	} 
 	    	printer.print(Printer::Kind::Truck, (char) States::EndDelivery, machineId, totalBottles);
 	    	machineId = (machineId + 1) % numVendingMachines;
+		}
+		
+		// clear the cargo
+		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
+			cargo[flavId] = 0;
 		}
 	}
 }

@@ -13,7 +13,7 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
 void BottlingPlant::main() {
 	printer.print( Printer::BottlingPlant, BottlingPlant::Start );
     for ( ;; ) {
-		int generated = 0;
+		unsigned int generated = 0;
         for ( int i = 0; i < NUMFLAVOURS; i++ ) {
             flavourStock[i] += mprng( maxShippedPerFlavour );
 			generated += flavourStock[i];

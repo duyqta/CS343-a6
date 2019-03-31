@@ -6,7 +6,7 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
 				 unsigned int timeBetweenShipments ): 
         printer( prt ), nameServer( nameServer ), numVendingMachines( numVendingMachines ), 
         maxShippedPerFlavour( maxShippedPerFlavour ), maxStockPerFlavour( maxStockPerFlavour ),
-        timeBetweenShipments( timeBetweenShipments ) {
+        timeBetweenShipments( timeBetweenShipments ), shutdown(false) {
     truck = new Truck( printer, nameServer, *this, numVendingMachines, maxStockPerFlavour );
 }
 

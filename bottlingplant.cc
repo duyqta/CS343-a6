@@ -11,10 +11,14 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
 }
 
 void BottlingPlant::main() {
+	printer.print( Printer::BottlingPlant, BottlingPlant::Start );
     for ( ;; ) {
+		int generated = 0;
         for ( int i = 0; i < NUMFLAVOURS; i++ ) {
             flavourStock[i] += mprng( maxShippedPerFlavour );
+			generated += flavourStock[i];
         }
+		printer.print( Printer::BottlingPlant, BottlingPlant::Generate, generated );
 
         _Accept( ~BottlingPlant ) {
             shutdown = true;
@@ -23,8 +27,11 @@ void BottlingPlant::main() {
 			} catch ( uMutexFailure::RendezvousFailure & ) {}
             delete truck;
             break;
-        } or _Accept( getShipment );
+        } or _Accept( getShipment ) {
+			printer.print( Printer::BottlingPlant, BottlingPlant::PickedUp );
+		}
     }
+	printer.print( Printer::BottlingPlant, BottlingPlant::Finished );
 }
 
 void BottlingPlant::getShipment( unsigned int cargo[] ) {

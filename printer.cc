@@ -7,10 +7,9 @@ Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, uns
         numCouriers( numCouriers ), numOfInput( 0 ),
         outputSize( 6 + numStudents + numVendingMachines + numCouriers ) {
     
-    // Print the voter columns
+    // Print the first row
     cout << "Parent\t" << "Gropoff\t" << "WATOff\t" << "Names\t"
-         << "Truck\t" << "Plant";
-    
+         << "Truck\t" << "Plant";    
     for ( int i = 0; i < ( int ) numStudents; i++ ) cout << "\tStud" << i;
     for ( int i = 0; i < ( int ) numVendingMachines; i++ ) cout << "\tMach" << i;
     for ( int i = 0; i < ( int ) numCouriers; i++ ) cout << "\tCour" << i;
@@ -97,10 +96,10 @@ void Printer::flush() {
 	    if ( it->value1Avail ) cout << it->value1;
         if ( it->value2Avail ) cout << "," << it->value2;
 
-	    // Finished printing for current voter, clear info
+	    // Finished printing for current subject, clear info
 	    it->clear();
 	
-	    if ( --count == 0 ) break;			    // No more voters to ouput
+	    if ( --count == 0 ) break;			    // No more columns to print
 	
 	    cout << "\t";
     }

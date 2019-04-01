@@ -6,7 +6,12 @@ void Truck::main() {
 
 	unsigned int cargo[NUMFLAVOURS];
 
+
 	for (;;) {
+		// clear the cargo
+		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
+			cargo[flavId] = 0;
+		}
 		yield(mprng(1, 10));
 		try {
 			_Enable {
@@ -17,17 +22,17 @@ void Truck::main() {
 			break;
 		}
 
-		int totalBottles = 0;
+		unsigned int totalBottles = 0;
 		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
 			totalBottles += cargo[flavId];
 		}
-		printer.print(Printer::Kind::Truck, (char) States::PickUp, totalBottles);
+		printer.print(Printer::Kind::Truck, (char) States::PickUp, (int)totalBottles);
 		for (unsigned int i = 0; i < numVendingMachines; i += 1) {
 	    	if (totalBottles == 0) break;
-	    	printer.print(Printer::Kind::Truck, (char) States::Delivery, machineId, totalBottles);
+	    	printer.print(Printer::Kind::Truck, (char) States::Delivery, machineId, (int)totalBottles);
 
 			unsigned int * inventory = machines[machineId]->inventory();
-			int notReplenished = 0;
+			unsigned int notReplenished = 0;
 			for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
 	        	unsigned int numNeeded = maxStockPerFlavour - inventory[flavId];
 	        	unsigned int numSupplied;
@@ -37,20 +42,16 @@ void Truck::main() {
 	        	} else {
 	        		numSupplied = numNeeded;
 	        	}
+
 	        	cargo[flavId] -= numSupplied;
 	        	totalBottles -= numSupplied;
 	    	}
 
 	    	if (notReplenished != 0) {
-	    		printer.print(Printer::Kind::Truck, (char) States::Unsuccess, machineId, notReplenished);
+	    		printer.print(Printer::Kind::Truck, (char) States::Unsuccess, machineId, (int)notReplenished);
 	    	} 
-	    	printer.print(Printer::Kind::Truck, (char) States::EndDelivery, machineId, totalBottles);
+	    	printer.print(Printer::Kind::Truck, (char) States::EndDelivery, machineId, (int)totalBottles);
 	    	machineId = (machineId + 1) % numVendingMachines;
-		}
-		
-		// clear the cargo
-		for ( int flavId = 0; flavId < NUMFLAVOURS; flavId += 1 ) {
-			cargo[flavId] = 0;
 		}
 	}
 }

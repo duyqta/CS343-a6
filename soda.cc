@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <unistd.h> // usleep for testing
 #include "config.h"
 #include "soda.h"
 #include "MPRNG.h"
@@ -64,10 +65,9 @@ int main( int argc, char * argv[] ) {
 	// 	machines[i] = new VendingMachine(printer, nameServer, i, cparms.sodaCost);
 	// }
 
-
-	// BottlingPlant plant(printer, nameServer, cparms.numVendingMachines,
-	// 					cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour,
-	// 					cparms.timeBetweenShipments);
+	// We may want to put this on the stack but we would need to figure how not to call the destructor twice
+	// BottlingPlant * plant = new BottlingPlant(printer, nameServer, cparms.numVendingMachines,
+	// 	cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
 
 	// Student * students[cparms.numStudents];
 	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
@@ -77,9 +77,11 @@ int main( int argc, char * argv[] ) {
 	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
 	// 	delete students[i];
 	// }
-	// plant.~BottlingPlant();
+
+	// usleep(10000000); // for testing only
+
+	// delete plant;
 	// for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
 	// 	delete machines[i];
 	// }
-
 } // main

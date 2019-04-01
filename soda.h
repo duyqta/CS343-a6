@@ -117,8 +117,10 @@ _Task VendingMachine;
 _Task NameServer {
 	Printer & printer;
 	unsigned int numVendingMachines;
-	vector<VendingMachine *> machines;
-	vector<unsigned int> assignedMachines;  // student i should use machine id assignedMachines[i] next
+	unsigned int numStudents;
+	unsigned int numRegistered;
+	VendingMachine ** machines;
+	unsigned int * assignedMachines;  // student i should use machines[ assignedMachines[i] ] next
 	void main();
 	enum States { Start = 'S', Register = 'R', NewVending = 'N', Finished = 'F' };
   public:

@@ -1,5 +1,6 @@
 #include <vector>
 #include <uFuture.h>
+#include <queue>
 #include "MPRNG.h"
 
 using namespace std;
@@ -53,7 +54,9 @@ _Task Parent {
   public:
 	Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay );
 };
+
 class WATCard {
+	unsigned int balance;
 	WATCard( const WATCard & ) = delete;	// prevent copying
 	WATCard & operator=( const WATCard & ) = delete;
   public:
@@ -65,13 +68,33 @@ class WATCard {
 };
 
 _Task WATCardOffice {
-	struct Job {							// marshalled arguments and return future
-		//Args args;							// call arguments (YOU DEFINE "Args")
-		WATCard::FWATCard result;			// return future
-		//Job( Args args ) : args( args ) {}
-	};
-	//_Task Courier { ... };					// communicates with bank
+	Printer & printer;
+	Bank & bank;
+	unsigned int numCouriers;
 
+	struct Args {
+		unsigned int sid;
+		unsigned int amount;
+		WATCard * card;
+		enum Jobs { Create, Transfer } job;
+	}
+	struct Job {							// marshalled arguments and return future
+		Args args;							// call arguments (YOU DEFINE "Args")
+		WATCard::FWATCard result;			// return future
+		Job( Args args ) : args( args ) {}
+	};
+	std::queue<Job*> jobQueue;
+
+	_Task Courier { 
+		Printer & printer;
+		Bank & bank;
+		WATCardOffice * cardOffice;
+		main(); 
+		Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice );
+	};					// communicates with bank
+	vector<Courier> couriers;
+
+	unsigned int lastId, lastAmount;
 	void main();
 	enum States { Start = 'S', RequestWork = 'W', CreateCall = 'C', TransferCall = 'T', Finished = 'F' };
   public:
@@ -160,11 +183,14 @@ _Task Student {
 	WATCardOffice & cardOffice;
 	Groupoff & groupoff;
 	unsigned int id, maxPurchases;
-	WATCard::FWATCard watcard;
+	WATCard::FWATCard fwatcard;
+	WATCard::FWATCard fgiftCard;
 	int numOfPurchases, favouriteFlavour;
+	VendingMachine * currentMachine;
+	bool watCardAvail, giftCardAvail;
 	void main();
 	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftFree = 'a', 
-			Bought = 'B', BoughtFree = 'A', Lost = 'L', Finished = 'F' };
+			WatCard = 'B', WatCardFree = 'A', Lost = 'L', Finished = 'F' };
   public:
 	Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases );

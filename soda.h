@@ -77,7 +77,7 @@ _Task WATCardOffice {
 		unsigned int amount;
 		WATCard * card;
 		enum Jobs { Create, Transfer } job;
-	}
+	};
 	struct Job {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
 		WATCard::FWATCard result;			// return future
@@ -89,7 +89,7 @@ _Task WATCardOffice {
 		Printer & printer;
 		Bank & bank;
 		WATCardOffice * cardOffice;
-		main(); 
+		void main(); 
 		Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice );
 	};					// communicates with bank
 	vector<Courier> couriers;

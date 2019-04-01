@@ -52,7 +52,7 @@ WATCard::FWATCard WATCardOffice::main() {
 WATCardOffice::Courier::Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice ): 
     printer( prt ), bank( bank ), cardOffice( cardOffice ) {}
 
-WATCardOffice::Courier::main() {
+void WATCardOffice::Courier::main() {
     for ( ;; ) {
         Job * job = cardOffice->requestWork();
         Args args = *job->args;

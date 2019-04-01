@@ -191,7 +191,7 @@ _Task Student {
 	VendingMachine * currentMachine;
 	bool watCardAvail, giftCardAvail;
 	void main();
-	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftFree = 'a', 
+	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftCardFree = 'a', 
 			WatCard = 'B', WatCardFree = 'A', Lost = 'L', Finished = 'F' };
   public:
 	Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,

@@ -1,12 +1,20 @@
 #include "soda.h"
+#include <vector>
 
 void Groupoff::main() {
 	printer.print(Printer::Kind::Groupoff, (char) States::Start);
-	WATCard::FWATCard cards[numStudents];
-	emptyCards = cards;
+	//WATCard::FWATCard emptyCards[numStudents];
 
 	// first give all students a empty future
-	for (unsigned int i = 0; i < numStudents; i += 1) _Accept(giftCard);
+	for (unsigned int i = 0; i < numStudents; i += 1) {
+
+		//emptyCards[cardCount] = WATCard::FWATCard();
+		if (cardCond.empty()) _Accept(giftCard);
+		cardCount += 1;
+		//newCard = emptyCards[cardCount];
+		emptyCards.push_back(WATCard::FWATCard());
+		cardCond.signalBlock();
+	}
 
 	for (unsigned int i = 0; i < numStudents; i += 1) {
 		_Accept(~Groupoff) {
@@ -23,7 +31,7 @@ void Groupoff::main() {
 			for (unsigned int i = chosenCard + 1; i < numStudents; i += 1) {
 				emptyCards[i - 1] = emptyCards[i];
 			}
-			emptyCards -= 1;
+			cardCount -= 1;
 		}
 	}
 	printer.print(Printer::Kind::Groupoff, (char) States::Finished);
@@ -38,7 +46,7 @@ Groupoff::Groupoff( Printer & prt, unsigned int numStudents,
 
 
 WATCard::FWATCard Groupoff::giftCard() {
-	emptyCards[cardCount] = WATCard::FWATCard();
-	cardCount += 1;
+	cardCond.wait();
+	
 	return emptyCards[cardCount - 1];
 }

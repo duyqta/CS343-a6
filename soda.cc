@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <unistd.h> // usleep for testing
 #include "config.h"
 #include "soda.h"
 #include "MPRNG.h"
@@ -51,37 +50,38 @@ int main( int argc, char * argv[] ) {
 		processConfigFile(defaultFile, cparms);
 	}
 
-	cout << "seed: " << seed << " numStudents: " << cparms.numStudents << endl;
+	//cout << "seed: " << seed << " numStudents: " << cparms.numStudents << endl;
 
-	// Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
-	// Bank bank(cparms.numStudents);
-	// Parent parent(printer, bank, cparms.numStudents, cparms.parentalDelay);
-	// WATCardOffice office(printer, bank, cparms.numCouriers);
-	// Groupoff groupoff(printer, cparms.numStudents, cparms.sodaCost, cparms.groupoffDelay);
-	// NameServer nameServer(printer, cparms.numVendingMachines, cparms.numStudents);
+	Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
+	Bank bank(cparms.numStudents);
+	Parent parent(printer, bank, cparms.numStudents, cparms.parentalDelay);
+	WATCardOffice office(printer, bank, cparms.numCouriers);
+	Groupoff groupoff(printer, cparms.numStudents, cparms.sodaCost, cparms.groupoffDelay);
+	NameServer nameServer(printer, cparms.numVendingMachines, cparms.numStudents);
 
-	// VendingMachine * machines[cparms.numVendingMachines];
-	// for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
-	// 	machines[i] = new VendingMachine(printer, nameServer, i, cparms.sodaCost);
-	// }
+	VendingMachine * machines[cparms.numVendingMachines];
+	for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
+		machines[i] = new VendingMachine(printer, nameServer, i, cparms.sodaCost);
+	}
 
 	// We may want to put this on the stack but we would need to figure how not to call the destructor twice
-	// BottlingPlant * plant = new BottlingPlant(printer, nameServer, cparms.numVendingMachines,
-	// 	cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
+	BottlingPlant * plant = new BottlingPlant(printer, nameServer, cparms.numVendingMachines,
+		cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
 
-	// Student * students[cparms.numStudents];
-	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
-	// 	students[i] = new Student(printer, nameServer, office, groupoff, i, cparms.maxPurchases);
-	// }
+	Student * students[cparms.numStudents];
+	for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
+		students[i] = new Student(printer, nameServer, office, groupoff, i, cparms.maxPurchases);
+	}
 
-	// for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
-	// 	delete students[i];
-	// }
+	// dealocate the students
+	for (unsigned int i = 0; i < cparms.numStudents; i += 1) {
+		delete students[i];
+	}
 
-	// usleep(10000000); // for testing only
+	delete plant;
 
-	// delete plant;
-	// for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
-	// 	delete machines[i];
-	// }
+	// dealocate the vending machines
+	for (unsigned int i = 0; i < cparms.numVendingMachines; i += 1) {
+		delete machines[i];
+	}
 } // main

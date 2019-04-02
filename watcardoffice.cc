@@ -89,7 +89,8 @@ void WATCardOffice::Courier::main() {
             printer.print( Printer::Courier, id, ( char ) Courier::Lost );
         } else {
             job->result.delivery( watcard );
-            printer.print( Printer::Courier, id, ( char ) Courier::CompleteTransfer );
+            printer.print( Printer::Courier, id, ( char ) Courier::CompleteTransfer, 
+                           ( int ) args.sid, ( int ) args.amount );
         }
     }
     printer.print( Printer::Courier, id, ( char ) Courier::Finished );

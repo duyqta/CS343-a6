@@ -4,7 +4,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -multi -O2 -std=c++11 -Wall -Wextra -MMD -DNUMFLAVOURS="${NUMFLAVOURS}" # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS =  bank.o bottlingplant.o config.o groupoff.o nameserver.o parent.o printer.o soda.o truck.o vendingmachine.o watcard.o # student.o watcardoffice.o # list of object files
+OBJECTS =  bank.o bottlingplant.o config.o groupoff.o nameserver.o parent.o printer.o soda.o truck.o vendingmachine.o watcard.o student.o watcardoffice.o # list of object files
 EXEC = soda
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"

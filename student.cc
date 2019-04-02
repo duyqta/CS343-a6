@@ -7,18 +7,18 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
     numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
     favouriteFlavour = mprng( NUMFLAVOURS - 1 );		// Choose favourite flavour
     fwatcard = cardOffice.create( id, 5 ); 				// Create watcard
-    fgiftCard = groupoff.giftcard();					// Create giftcard (only once)
+    fgiftCard = groupoff.giftCard();					// Create giftcard (only once)
     currentMachine = nameServer.getMachine( id );		// Get vending machine
 }
 
 void Student::main() {
-    printer.print( Printer::Student, Student::Start, id, 
+    printer.print( Printer::Student, id, ( char ) Student::Start, 
         favouriteFlavour, numOfPurchases );
-    printer.print( Printer::Student, Student::SelectVending, 
-        id, ( int ) currentMachine->getId() );
-    WATCard * card;								// Current card to use 
-	WATCard * watcard, giftCard;
-    States cardType;							// Giftcard or watcard
+    printer.print( Printer::Student, id, ( char ) Student::SelectVending, 
+        ( int ) currentMachine->getId() );
+    WATCard * card = nullptr;								// Current card to use 
+	WATCard * watcard = nullptr, * giftCard = nullptr;
+    States cardType = Student::WatCard;			// Giftcard or watcard
 
 	// Buy soda numOfPuchases times
     for ( int i = 0; i < numOfPurchases; i++ ) {
@@ -26,34 +26,34 @@ void Student::main() {
 
         for ( ;; ) {							// Loop until buy successfully
             try {
-                When( !giftCardAvail ) _Select ( fgiftCard ) {		// Priority to giftcard
+                _When( !giftCardAvail ) _Select ( fgiftCard ) {		// Priority to giftcard
                     giftCardAvail = true;
                     giftCard = fgiftCard;
 
                     cardType = Student::GiftCard;
                     fgiftCard.reset();
-                } or When( !watCardAvail ) _Select( fwatcard ) {	// Wait if watcard not available
+                } or _When( !watCardAvail ) _Select( fwatcard ) {	// Wait if watcard not available
                     watCardAvail = true;
                     watcard = fwatcard;
 
                     cardType = Student::WatCard;
                     fwatcard.reset();
                 } // Do not block if either available
-				When( watCardAvail || ( giftCardAvail && ( giftCard.getBalance() > 0 ))) _Else {}
+				_When( watCardAvail || ( giftCardAvail && ( giftCard->getBalance() > 0 ))) _Else {}
 
-				if ( giftCardAvail && ( giftCard.getBalance() > 0 ) ) card = giftCard;	// Priority to giftcard
+				if ( giftCardAvail && ( giftCard->getBalance() > 0 ) ) card = giftCard;	// Priority to giftcard
 				else card = watcard;
 
-                card.getBalance();
-                currentMachine->buy( favouriteFlavour, card );		// Buy from vending machine
+                card->getBalance();
+                currentMachine->buy( ( VendingMachine::Flavours ) favouriteFlavour, *card );		// Buy from vending machine
 
             } catch ( WATCardOffice::Lost & ) {						// Lost card
-                printer.print( Printer::Student, Student::Lost, id );
+                printer.print( Printer::Student, id, ( char ) Student::Lost );
                 fwatcard = cardOffice.create( id, 5 );				// Create a new card
                 continue;
             } catch ( VendingMachine::Funds & ) {					// Insufficient funds
-                int amount = 5 + sodaCost;							// Current soda cost and 5$
-                fwatcard = cardOffice.transfer( id, amount, &card );	// Transfer extra money 
+                int amount = 5 + currentMachine->cost();							// Current soda cost and 5$
+                fwatcard = cardOffice.transfer( id, amount, card );	// Transfer extra money 
                 continue;
             } catch ( VendingMachine::Stock & ) {					// Out of stock
                 currentMachine = nameServer.getMachine( id );		// Get new vending from nameserver
@@ -68,7 +68,8 @@ void Student::main() {
             }
 
 			// Student bought the soda
-            printer.print( Printer::Student, cardType, id, favouriteFlavour, card.getBalance());
+            printer.print( Printer::Student, id, ( char ) cardType, 
+                favouriteFlavour, card->getBalance());
         }
     }
 }

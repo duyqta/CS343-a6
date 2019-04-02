@@ -89,10 +89,14 @@ _Task WATCardOffice {
 		Printer & printer;
 		Bank & bank;
 		WATCardOffice * cardOffice;
+		unsigned int id;
+		enum States { Start = 'S', StartTransfer = 't', Lost = 'L', 
+			CompleteTransfer = 'T', Finished = 'F' };
 		void main(); 
-		Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice );
+	  public: 
+		Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice, unsigned id );
 	};					// communicates with bank
-	vector<Courier> couriers;
+	vector<Courier*> couriers;
 
 	unsigned int lastId, lastAmount;
 	void main();
@@ -100,6 +104,7 @@ _Task WATCardOffice {
   public:
 	_Event Lost {};							// lost WATCard
 	WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers );
+	~WATCardOffice();
 	WATCard::FWATCard create( unsigned int sid, unsigned int amount );
 	WATCard::FWATCard transfer( unsigned int sid, unsigned int amount, WATCard * card );
 	Job * requestWork();

@@ -50,6 +50,7 @@ void Truck::main() {
 	    	if (notReplenished != 0) {
 	    		printer.print(Printer::Kind::Truck, (char) States::Unsuccess, machineId, (int)notReplenished);
 	    	} 
+	    	machines[machineId]->restocked();
 	    	printer.print(Printer::Kind::Truck, (char) States::EndDelivery, machineId, (int)totalBottles);
 	    	machineId = (machineId + 1) % numVendingMachines;
 		}

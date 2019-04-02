@@ -6,10 +6,10 @@ void WATCard::deposit( unsigned int amount ){
     balance += amount;
 }
 
-void withdraw( unsigned int amount ) {
+void WATCard::withdraw( unsigned int amount ) {
     balance -= amount;
 }
 
-unsigned int getBalance() {
+unsigned int WATCard::getBalance() {
     return balance;
 }

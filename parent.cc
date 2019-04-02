@@ -6,14 +6,14 @@ Parent::Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned i
 void Parent::main() {
     for ( ;; ) {
         _Accept ( ~Parent ) {
-            printer::print( Printer::Parent, Finished );
+            printer.print( Printer::Parent, Finished );
             break;
         } _Else {
             yield( parentalDelay );
             unsigned int id = mprng( numStudents - 1 );
             unsigned int amount = mprng( 1, 3 );
             bank.deposit( id, amount );
-            printer.print( Printer::Parent, Deposit, id, amount);
+            printer.print( Printer::Parent, Deposit, (int) id, (int) amount);
         }
     }
 }

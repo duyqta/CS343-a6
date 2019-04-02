@@ -50,10 +50,12 @@ void Student::main() {
             } catch ( WATCardOffice::Lost & ) {						// Lost card
                 printer.print( Printer::Student, id, ( char ) Student::Lost );
                 fwatcard = cardOffice.create( id, 5 );				// Create a new card
+                watCardAvail = false;
                 continue;
             } catch ( VendingMachine::Funds & ) {					// Insufficient funds
                 int amount = 5 + currentMachine->cost();							// Current soda cost and 5$
                 fwatcard = cardOffice.transfer( id, amount, card );	// Transfer extra money 
+                watCardAvail = false;
                 continue;
             } catch ( VendingMachine::Stock & ) {					// Out of stock
                 currentMachine = nameServer.getMachine( id );		// Get new vending from nameserver

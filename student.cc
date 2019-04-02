@@ -16,7 +16,7 @@ void Student::main() {
     currentMachine = nameServer.getMachine( id );		// Get vending machine
     printer.print( Printer::Student, id, ( char ) Student::SelectVending, 
         ( int ) currentMachine->getId() );
-        
+
     WATCard * card = nullptr;								// Current card to use 
 	WATCard * watcard = nullptr, * giftCard = nullptr;
     States cardType = Student::WatCard;			// Giftcard or watcard
@@ -60,6 +60,8 @@ void Student::main() {
                 continue;
             } catch ( VendingMachine::Stock & ) {					// Out of stock
                 currentMachine = nameServer.getMachine( id );		// Get new vending from nameserver
+                printer.print( Printer::Student, id, ( char ) Student::SelectVending, 
+                    ( int ) currentMachine->getId() );
                 continue;
             } catch ( VendingMachine::Free & ) {
                 if ( cardType == Student::WatCard ) 
@@ -76,4 +78,5 @@ void Student::main() {
             printer.print( Printer::Student, id, ( char ) cardType, 
                 favouriteFlavour, card->getBalance());
     }
+    printer.print( Printer::Student, id, ( char ) Student::Finished );
 }

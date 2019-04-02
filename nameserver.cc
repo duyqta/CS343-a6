@@ -14,12 +14,12 @@ void NameServer::main() {
 		assignedMachines[i] = i % numVendingMachines;
 	}	
 
-	// first allow all vending machines to register
+	// wait for all vending machines to register
 	while (numRegistered < numVendingMachines) {
 		_Accept(VMregister) {
 			printer.print(Printer::Kind::NameServer, (char) States::Register, 
 						  machines[numRegistered - 1]->getId());
-		} //Note this does not accept destructor
+		}
 	}
 
 	for (;;) {

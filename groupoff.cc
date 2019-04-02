@@ -4,26 +4,29 @@ void Groupoff::main() {
 	printer.print(Printer::Kind::Groupoff, (char) States::Start);
 	WATCard::FWATCard cards[numStudents];
 	emptyCards = cards;
-	for (unsigned int i = 0; i < numStudents; i += 1) _Accept(giftCard); //Note this does not accept destructor
+
+	// first give all students a empty future
+	for (unsigned int i = 0; i < numStudents; i += 1) _Accept(giftCard);
 
 	for (unsigned int i = 0; i < numStudents; i += 1) {
-		yield(groupoffDelay); // should i yield before destructor accept?
 		_Accept(~Groupoff) {
-			printer.print(Printer::Kind::Groupoff, (char) States::Finished);
 			break;
 		} _Else {
-			unsigned int chosenCard = mprng(cardCount - 1);
+			yield(groupoffDelay);
+			unsigned int chosenCard = mprng(cardCount - 1);	// chose a random gift card to be filled
 			WATCard * giftCard = new WATCard();
 			giftCard->deposit(sodaCost);
-			emptyCards[chosenCard].delivery(giftCard);
+			emptyCards[chosenCard].delivery(giftCard);		// put the filled card in the future
 			printer.print(Printer::Kind::Groupoff, (char) States::Deposit, (int) sodaCost);
 
+			// shift all cards in the array that are after the chosen card
 			for (unsigned int i = chosenCard + 1; i < numStudents; i += 1) {
 				emptyCards[i - 1] = emptyCards[i];
 			}
 			emptyCards -= 1;
 		}
 	}
+	printer.print(Printer::Kind::Groupoff, (char) States::Finished);
 }
 
 Groupoff::Groupoff( Printer & prt, unsigned int numStudents, 

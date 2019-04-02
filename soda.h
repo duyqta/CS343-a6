@@ -111,12 +111,14 @@ _Task WATCardOffice {
 };
 
 _Task Groupoff {
-	WATCard::FWATCard * emptyCards;
+	vector<WATCard::FWATCard> emptyCards;
 	Printer & printer;
+	WATCard::FWATCard newCard;
 	unsigned int numStudents;
 	unsigned int sodaCost;
 	unsigned int groupoffDelay;
 	unsigned int cardCount;
+	uCondition cardCond;
 	void main();
 	enum States { Start = 'S', Deposit = 'D', Finished = 'F' };
   public:

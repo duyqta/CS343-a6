@@ -15,13 +15,21 @@ void NameServer::main() {
 	}	
 
 	// first allow all vending machines to register
-	while (numRegistered < numVendingMachines) _Accept(VMregister);
+	while (numRegistered < numVendingMachines) {
+		_Accept(VMregister) {
+			printer.print(Printer::Kind::NameServer, (char) States::Register, 
+						  machines[numRegistered - 1]->getId());
+		} //Note this does not accept destructor
+	}
 
 	for (;;) {
 		_Accept(~NameServer) {
 			printer.print(Printer::Kind::NameServer, (char) States::Finished); 
 			break;
-		} or _Accept(getMachine, getMachineList);
+		} or _Accept(getMachine) {
+			printer.print(Printer::Kind::NameServer, States::NewVending, 
+						  (int) studentId, assignedMachine->getId() );
+		} or _Accept(getMachineList);
 	}
 }
 
@@ -29,14 +37,13 @@ NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned
 	printer(prt), numVendingMachines(numVendingMachines), numStudents(numStudents), numRegistered(0) {}
 
 void NameServer::VMregister( VendingMachine * vendingmachine ) {
-	printer.print(Printer::Kind::NameServer, (char) States::Register, vendingmachine->getId());
 	machines[numRegistered] = vendingmachine;
 	numRegistered += 1;
 }
 
 VendingMachine * NameServer::getMachine( unsigned int id ) {
-	VendingMachine * assignedMachine = machines[ assignedMachines[id] ];
-	printer.print(Printer::Kind::NameServer, States::NewVending, (int) id, assignedMachine->getId() );
+	assignedMachine = machines[ assignedMachines[id] ];
+	studentId = id;
 	assignedMachines[id] = (assignedMachines[id] + 1) % numVendingMachines; // advance to next machine
 	return assignedMachine;
 }

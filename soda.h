@@ -106,6 +106,12 @@ _Task WATCardOffice {
 };
 
 _Task Groupoff {
+	WATCard::FWATCard * emptyCards;
+	Printer & printer;
+	unsigned int numStudents;
+	unsigned int sodaCost;
+	unsigned int groupoffDelay;
+	unsigned int cardCount;
 	void main();
 	enum States { Start = 'S', Deposit = 'D', Finished = 'F' };
   public:
@@ -119,8 +125,10 @@ _Task NameServer {
 	unsigned int numVendingMachines;
 	unsigned int numStudents;
 	unsigned int numRegistered;
+	unsigned int studentId;
 	VendingMachine ** machines;
 	unsigned int * assignedMachines;  // student i should use machines[ assignedMachines[i] ] next
+	VendingMachine * assignedMachine;
 	void main();
 	enum States { Start = 'S', Register = 'R', NewVending = 'N', Finished = 'F' };
   public:
@@ -131,15 +139,25 @@ _Task NameServer {
 };
 
 _Task VendingMachine {
+	unsigned int currFlavour;
+	WATCard * currCard;
+	uCondition buyCond;
+	Printer & printer;
+	NameServer & nameServer;
+	unsigned int id;
+	unsigned int sodaCost;
+	unsigned int inv[NUMFLAVOURS];	
+	enum ExceptType { FreeEx, FundsEx, StockEx, NoEx };
+	ExceptType exceptToThrow;
 	void main();
 	enum States { Start = 'S', Reloading = 'r', CompleteReloading = 'R', Bought = 'B', Finished = 'F' };
   public:
-	//enum Flavours { ... }; 				// flavours of soda (YOU DEFINE)
-	_Event Free {};						// free, advertisement
-	_Event Funds {};					// insufficient funds
-	_Event Stock {};					// out of stock for particular flavour
+	enum Flavours { BlackCherry, CreamSoda, RootBeer, Lime }; 	// flavours of soda (YOU DEFINE)
+	_Event Free {};												// free, advertisement
+	_Event Funds {};											// insufficient funds
+	_Event Stock {};											// out of stock for particular flavour
 	VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost );
-	//void buy( Flavours flavour, WATCard & card );
+	void buy( Flavours flavour, WATCard & card );
 	unsigned int * inventory();
 	void restocked();
 	_Nomutex unsigned int cost() const;

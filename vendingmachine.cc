@@ -1,15 +1,16 @@
 #include "soda.h"
 #include <vector>
+#include <iostream>
 
 void VendingMachine::main() {
-	printer.print(Printer::Kind::Vending, (char) States::Start, (int) sodaCost);
+	printer.print(Printer::Kind::Vending, id, (char) States::Start, (int) sodaCost);
 	nameServer.VMregister(this);
 	for (unsigned int i = 0; i < NUMFLAVOURS; i += 1) {
 		inv[i] = 0; // set inital inventory to 0 for all flavours
 	}
 	for (;;) {
 		_Accept(~VendingMachine) {
-			printer.print(Printer::Kind::Vending, (char) States::Finished);
+			printer.print(Printer::Kind::Vending, id, (char) States::Finished);
 			break;
 		} or _Accept(buy) { // priority goes to buy over delivery
 			if (currCard->getBalance() < sodaCost) { 
@@ -22,13 +23,14 @@ void VendingMachine::main() {
 				exceptToThrow = NoEx;
 				currCard->withdraw(sodaCost);
 				inv[currFlavour] -= 1;
-				printer.print(Printer::Kind::Vending, (char) States::Bought, (int) currFlavour, inv[currFlavour]);
+				printer.print(Printer::Kind::Vending, id, (char) States::Bought, (int) currFlavour, inv[currFlavour]);
 			}
 			buyCond.signalBlock();
 		} or _Accept(inventory) {
-			printer.print(Printer::Kind::Vending, (char) States::Reloading);
+			printer.print(Printer::Kind::Vending, id, (char) States::Reloading);
 			_Accept(restocked, ~VendingMachine);
-			printer.print(Printer::Kind::Vending, (char) States::CompleteReloading);
+			printer.print(Printer::Kind::Vending, id, (char) States::CompleteReloading);
+			//cout << inv[0] << " " << inv[1] << " " << inv[2] <<" "<<  inv[3] << endl;
 		}
 	}
 }

@@ -43,6 +43,7 @@ void Truck::main() {
 	        		numSupplied = numNeeded;
 	        	}
 
+	        	inventory[flavId] += numSupplied;
 	        	cargo[flavId] -= numSupplied;
 	        	totalBottles -= numSupplied;
 	    	}

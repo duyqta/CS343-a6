@@ -91,6 +91,7 @@ void WATCardOffice::Courier::main() {
             job->result.delivery( watcard );
             printer.print( Printer::Courier, id, ( char ) Courier::CompleteTransfer );
         }
+        delete job;
     }
     printer.print( Printer::Courier, id, ( char ) Courier::Finished );
 }

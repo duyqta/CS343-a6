@@ -3,19 +3,20 @@
 Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases ): 
              printer( prt ), nameServer( nameServer ), cardOffice( cardOffice ), groupoff( groupoff ),
-             id( id ), maxPurchases( maxPurchases ), watCardAvail( false ), giftCardAvail( false ) {
+             id( id ), maxPurchases( maxPurchases ), watCardAvail( false ), giftCardAvail( false ) {}
+
+void Student::main() {
     numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
     favouriteFlavour = mprng( NUMFLAVOURS - 1 );		// Choose favourite flavour
+    printer.print( Printer::Student, id, ( char ) Student::Start, 
+        favouriteFlavour, numOfPurchases );
+
     fwatcard = cardOffice.create( id, 5 ); 				// Create watcard
     fgiftCard = groupoff.giftCard();					// Create giftcard (only once)
     currentMachine = nameServer.getMachine( id );		// Get vending machine
-}
-
-void Student::main() {
-    printer.print( Printer::Student, id, ( char ) Student::Start, 
-        favouriteFlavour, numOfPurchases );
     printer.print( Printer::Student, id, ( char ) Student::SelectVending, 
         ( int ) currentMachine->getId() );
+        
     WATCard * card = nullptr;								// Current card to use 
 	WATCard * watcard = nullptr, * giftCard = nullptr;
     States cardType = Student::WatCard;			// Giftcard or watcard
@@ -68,10 +69,11 @@ void Student::main() {
 
                 yield( 4 );
             }
+            break;
+        }
 
-			// Student bought the soda
+        // Student bought the soda
             printer.print( Printer::Student, id, ( char ) cardType, 
                 favouriteFlavour, card->getBalance());
-        }
     }
 }

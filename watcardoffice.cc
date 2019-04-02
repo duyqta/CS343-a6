@@ -2,6 +2,7 @@
 
 WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers ):
     printer( prt ), bank( bank ), numCouriers( numCouriers ) {
+    printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::Start );
     for ( unsigned int i = 0; i < numCouriers; i++ ) 
         couriers.push_back( new Courier( printer, bank, this, i ) );	// Create couriers
 }

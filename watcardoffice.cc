@@ -61,6 +61,7 @@ void WATCardOffice::main() {
             printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
         }
     }
+    printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::Finished );
 }
 
 WATCardOffice::Courier::Courier( Printer & prt, Bank & bank, WATCardOffice * cardOffice, unsigned int id ): 

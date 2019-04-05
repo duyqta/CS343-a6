@@ -35,15 +35,7 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
     return job->result;
 }
 
-WATCardOffice::Job * WATCardOffice::requestWork() {
-    // _When ( jobQueue.empty() ) _Accept( create, transfer ) {}   // Block if no job available
-    // or _When ( jobQueue.empty() ) _Accept( ~WATCardOffice )	{
-    //     Args args = { 0, 0, NULL, Args::Destroy };
-    //     Job * job = new Job( args );
-    //     jobQueue.push( job );
-    //     terminate = true;
-    //     terminateCond.wait();
-    // }	
+WATCardOffice::Job * WATCardOffice::requestWork() {	
     if ( jobQueue.empty() ) requestWait.wait();
 
 	// Pop available job from queue
@@ -57,21 +49,28 @@ WATCardOffice::Job * WATCardOffice::requestWork() {
 void WATCardOffice::main() {
     for ( ;; ) {
         _Accept( ~WATCardOffice ){
+            // Create enough terminating jobs for number of couriers
             for ( unsigned int i = 0; i < numCouriers; i++ ) {
                 Args args = { 0, 0, NULL, Args::Destroy };
                 Job * job = new Job( args );
                 jobQueue.push( job );
             }
+            
+            // Unblock all waiting couriers
             while ( !requestWait.empty() ) requestWait.signalBlock();
+
+            // Delete all couriers
             for ( unsigned int i = 0; i < numCouriers; i++ ) delete couriers[i];
             break;
         } or _Accept( requestWork ) {
+            // If courier not blocked, print
             if ( jobRequested ) {
                 printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
                 jobRequested = false;
             }
         } or _Accept( create ) {
             printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::CreateCall, lastId, lastAmount);
+            // Wake up blocked couriers if there is any
             if ( !requestWait.empty() ) {
                 requestWait.signalBlock();
                 printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
@@ -79,6 +78,7 @@ void WATCardOffice::main() {
             }
         } or _Accept( transfer ) {
             printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::TransferCall, lastId, lastAmount);
+            // Wake up blocked couriers if there is any
             if ( !requestWait.empty() ) {
                 requestWait.signalBlock();
                 printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
@@ -99,6 +99,8 @@ void WATCardOffice::Courier::main() {
         Job * job = cardOffice->requestWork();
         Args args = job->args;
         WATCard * watcard = nullptr; 
+
+        // If terminating job, break
         if ( args.job == Args::Destroy ) {
             delete job;
             break;
@@ -124,6 +126,8 @@ void WATCardOffice::Courier::main() {
             printer.print( Printer::Courier, id, ( char ) Courier::CompleteTransfer, 
                            ( int ) args.sid, ( int ) args.amount );
         }
+
+        // Delete the job
         delete job;
     }
     printer.print( Printer::Courier, id, ( char ) Courier::Finished );

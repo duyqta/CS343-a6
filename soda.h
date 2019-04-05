@@ -212,10 +212,10 @@ _Task Student {
 	WATCardOffice & cardOffice;
 	Groupoff & groupoff;
 	unsigned int id, maxPurchases;
-	WATCard::FWATCard fwatcard;
-	WATCard::FWATCard fgiftCard;
-	int numOfPurchases, favouriteFlavour;
-	VendingMachine * currentMachine;
+	WATCard::FWATCard fwatcard;					// future watcard
+	WATCard::FWATCard fgiftCard;				// future giftcard
+	int numOfPurchases, favouriteFlavour;		
+	VendingMachine * currentMachine;			// Received vending machine from nameserver
 	bool watCardAvail, giftCardAvail;
 	void main();
 	enum States { Start = 'S', SelectVending = 'V', GiftCard = 'G', GiftCardFree = 'a', 

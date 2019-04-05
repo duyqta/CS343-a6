@@ -6,8 +6,7 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
              id( id ), maxPurchases( maxPurchases ), watCardAvail( false ), giftCardAvail( false ) {}
 
 void Student::main() {
-    //numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
-    numOfPurchases = 1;
+    numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
     favouriteFlavour = mprng( NUMFLAVOURS - 1 );		// Choose favourite flavour
     printer.print( Printer::Student, id, ( char ) Student::Start, 
         favouriteFlavour, numOfPurchases );
@@ -81,14 +80,16 @@ void Student::main() {
             printer.print( Printer::Student, id, ( char ) cardType, 
                 favouriteFlavour, card->getBalance());
     }
+    // Delete giftcard if student received it. Else, not the student's responsibility.
     if ( giftCard != nullptr ) delete giftCard;
 
+    // Wait for couriers to return watcard, since student has a responsibility to delete their watcard
     try { 
         _When( !watCardAvail ) _Select( fwatcard ) {
             watcard = fwatcard;
         }
     } catch ( WATCardOffice::Lost & ) {}
-
-    if ( watcard != nullptr ) delete watcard;
+    delete watcard;
+    
     printer.print( Printer::Student, id, ( char ) Student::Finished );
 }

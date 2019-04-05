@@ -6,8 +6,8 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
              id( id ), maxPurchases( maxPurchases ), watCardAvail( false ), giftCardAvail( false ) {}
 
 void Student::main() {
-    numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
-    //numOfPurchases = 1;
+    //numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
+    numOfPurchases = 1;
     favouriteFlavour = mprng( NUMFLAVOURS - 1 );		// Choose favourite flavour
     printer.print( Printer::Student, id, ( char ) Student::Start, 
         favouriteFlavour, numOfPurchases );
@@ -82,6 +82,13 @@ void Student::main() {
                 favouriteFlavour, card->getBalance());
     }
     if ( giftCard != nullptr ) delete giftCard;
+
+    try { 
+        _When( !watCardAvail ) _Select( fwatcard ) {
+            watcard = fwatcard;
+        }
+    } catch ( WATCardOffice::Lost & ) {}
+
     if ( watcard != nullptr ) delete watcard;
     printer.print( Printer::Student, id, ( char ) Student::Finished );
 }

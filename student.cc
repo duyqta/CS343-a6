@@ -7,6 +7,7 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
 
 void Student::main() {
     numOfPurchases = mprng( 1, maxPurchases );			// Choose number of purchases
+    //numOfPurchases = 1;
     favouriteFlavour = mprng( NUMFLAVOURS - 1 );		// Choose favourite flavour
     printer.print( Printer::Student, id, ( char ) Student::Start, 
         favouriteFlavour, numOfPurchases );
@@ -52,11 +53,13 @@ void Student::main() {
                 printer.print( Printer::Student, id, ( char ) Student::Lost );
                 fwatcard = cardOffice.create( id, 5 );				// Create a new card
                 watCardAvail = false;
+                watcard = nullptr;
                 continue;
             } catch ( VendingMachine::Funds & ) {					// Insufficient funds
                 int amount = 5 + currentMachine->cost();							// Current soda cost and 5$
                 fwatcard = cardOffice.transfer( id, amount, card );	// Transfer extra money 
                 watCardAvail = false;
+                watcard = nullptr;
                 continue;
             } catch ( VendingMachine::Stock & ) {					// Out of stock
                 currentMachine = nameServer.getMachine( id );		// Get new vending from nameserver
@@ -78,5 +81,7 @@ void Student::main() {
             printer.print( Printer::Student, id, ( char ) cardType, 
                 favouriteFlavour, card->getBalance());
     }
+    if ( giftCard != nullptr ) delete giftCard;
+    if ( watcard != nullptr ) delete watcard;
     printer.print( Printer::Student, id, ( char ) Student::Finished );
 }

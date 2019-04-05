@@ -76,7 +76,7 @@ _Task WATCardOffice {
 		unsigned int sid;
 		unsigned int amount;
 		WATCard * card;
-		enum Jobs { Create, Transfer } job;
+		enum Jobs { Create, Transfer, Destroy } job;
 	};
 	struct Job {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
@@ -98,13 +98,14 @@ _Task WATCardOffice {
 	};					// communicates with bank
 	vector<Courier*> couriers;
 
+	uCondition requestWait;
+	bool jobRequested;
 	unsigned int lastId, lastAmount;
 	void main();
 	enum States { Start = 'S', RequestWork = 'W', CreateCall = 'C', TransferCall = 'T', Finished = 'F' };
   public:
 	_Event Lost {};							// lost WATCard
 	WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers );
-	~WATCardOffice();
 	WATCard::FWATCard create( unsigned int sid, unsigned int amount );
 	WATCard::FWATCard transfer( unsigned int sid, unsigned int amount, WATCard * card );
 	Job * requestWork();

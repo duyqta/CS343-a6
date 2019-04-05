@@ -50,3 +50,10 @@ WATCard::FWATCard Groupoff::giftCard() {
 	
 	return emptyCards[cardCount - 1];
 }
+
+
+Groupoff::~Groupoff() {
+	for (unsigned int i = 0; i < cardCount; i += 1) {
+		if (emptyCards[i].available()) delete (emptyCards[i])();
+	}
+}

@@ -40,10 +40,15 @@ void Student::main() {
                     cardType = Student::WatCard;
                     fwatcard.reset();
                 } // Do not block if either available
-				_When( watCardAvail || ( giftCardAvail && ( giftCard->getBalance() > 0 ))) _Else {}
-
-				if ( giftCardAvail && ( giftCard->getBalance() > 0 ) ) card = giftCard;	// Priority to giftcard
-				else card = watcard;
+				_When( watCardAvail || ( giftCardAvail && ( giftCard->getBalance() > 0 ))) _Else {
+                    if ( giftCardAvail && ( giftCard->getBalance() > 0 ) ) {
+                        card = giftCard;	// Priority to giftcard
+                        cardType = Student::GiftCard;
+                    } else {
+                        card = watcard;
+                        cardType = Student::WatCard;
+                    }
+                }
 
                 card->getBalance();
                 currentMachine->buy( ( VendingMachine::Flavours ) favouriteFlavour, *card );		// Buy from vending machine

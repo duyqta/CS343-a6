@@ -40,14 +40,14 @@ void Student::main() {
                     cardType = Student::WatCard;
                     fwatcard.reset();
                 } // Do not block if either available
-				_When( watCardAvail || ( giftCardAvail && ( giftCard->getBalance() > 0 ))) _Else {
-                    if ( giftCardAvail && ( giftCard->getBalance() > 0 ) ) {
-                        card = giftCard;	// Priority to giftcard
-                        cardType = Student::GiftCard;
-                    } else {
-                        card = watcard;
-                        cardType = Student::WatCard;
-                    }
+				_When( watCardAvail || ( giftCardAvail && ( giftCard->getBalance() > 0 ))) _Else {}
+
+                if ( giftCardAvail && ( giftCard->getBalance() > 0 ) ) {
+                    card = giftCard;	// Priority to giftcard
+                    cardType = Student::GiftCard;
+                } else {
+                    card = watcard;
+                    cardType = Student::WatCard;
                 }
 
                 card->getBalance();

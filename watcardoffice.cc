@@ -102,7 +102,7 @@ void WATCardOffice::Courier::main() {
             break;
         }
 
-        printer.print( Printer::Courier, id, ( char ) Courier::StartTransfer );
+        printer.print( Printer::Courier, id, ( char ) Courier::StartTransfer, ( int ) args.sid, ( int ) args.amount );
 
 		// Create new WatCard or use preexisting WatCard
         if ( args.job == Args::Create ) watcard = new WATCard();
@@ -115,7 +115,7 @@ void WATCardOffice::Courier::main() {
 		// 1 in 6 chance of losing the card
         if ( mprng( 1, 6 ) == 1 ) {
             job->result.exception( new WATCardOffice::Lost() );
-            printer.print( Printer::Courier, id, ( char ) Courier::Lost );
+            printer.print( Printer::Courier, id, ( char ) Courier::Lost, ( int ) args.sid );
             delete watcard;
         } else {
             job->result.delivery( watcard );

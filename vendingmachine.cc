@@ -1,6 +1,4 @@
 #include "soda.h"
-#include <vector>
-#include <iostream>
 
 void VendingMachine::main() {
 	printer.print(Printer::Kind::Vending, id, (char) States::Start, (int) sodaCost);
@@ -23,14 +21,14 @@ void VendingMachine::main() {
 				exceptToThrow = NoEx;
 				currCard->withdraw(sodaCost);
 				inv[currFlavour] -= 1;
-				printer.print(Printer::Kind::Vending, id, (char) States::Bought, (int) currFlavour, inv[currFlavour]);
+				printer.print(Printer::Kind::Vending, id, (char) States::Bought, 
+							  (int) currFlavour, inv[currFlavour]);
 			}
 			buyCond.signalBlock();
 		} or _Accept(inventory) {
 			printer.print(Printer::Kind::Vending, id, (char) States::Reloading);
 			_Accept(restocked, ~VendingMachine);
 			printer.print(Printer::Kind::Vending, id, (char) States::CompleteReloading);
-			//cout << inv[0] << " " << inv[1] << " " << inv[2] <<" "<<  inv[3] << endl;
 		}
 	}
 }
@@ -49,6 +47,8 @@ void VendingMachine::buy( Flavours flavour, WATCard & card ) {
 			_Throw Funds();
 		case StockEx:
 			_Throw Stock();
+		case NoEx:
+			; // don't throw anything
 	}
 }
 

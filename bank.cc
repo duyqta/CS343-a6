@@ -9,11 +9,11 @@ Bank::Bank( unsigned int numStudents ) {
 }
 
 void Bank::deposit( unsigned int id, unsigned int amount ) {
-	accounts[id] += amount;
+	accounts.at(id) += amount;
 }
 
 void Bank::withdraw( unsigned int id, unsigned int amount ) {
 	// if there is not enough money wait until enough has been deposited
-	while (accounts[id] < amount) _Accept(deposit);
-	accounts[id] -= amount;
+	while (accounts.at(id) < amount) _Accept(deposit);
+	accounts.at(id) -= amount;
 }

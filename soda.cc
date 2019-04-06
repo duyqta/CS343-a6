@@ -50,8 +50,6 @@ int main( int argc, char * argv[] ) {
 		processConfigFile(defaultFile, cparms);
 	}
 
-	//cout << "seed: " << seed << " numStudents: " << cparms.numStudents << endl;
-
 	Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
 	Bank bank(cparms.numStudents);
 	Parent parent(printer, bank, cparms.numStudents, cparms.parentalDelay);
@@ -64,7 +62,6 @@ int main( int argc, char * argv[] ) {
 		machines[i] = new VendingMachine(printer, nameServer, i, cparms.sodaCost);
 	}
 
-	// We may want to put this on the stack but we would need to figure how not to call the destructor twice
 	BottlingPlant * plant = new BottlingPlant(printer, nameServer, cparms.numVendingMachines,
 		cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
 

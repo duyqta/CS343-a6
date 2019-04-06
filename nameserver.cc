@@ -4,10 +4,9 @@
 void NameServer::main() {
 	printer.print(Printer::Kind::NameServer, (char) States::Start);
 
-	unsigned int assignedMachinesList[numStudents];
-	VendingMachine * machineList[numVendingMachines];
-	machines = machineList;
-	assignedMachines = assignedMachinesList;
+	// student i should always use machines[ assignedMachines[i] ] next
+	unsigned int assignedMachines[numStudents];	
+	machines.resize(numVendingMachines);
 
 	// assign an intial machine to each student
 	for (unsigned int i = 0; i < numStudents; i += 1) {
@@ -18,7 +17,7 @@ void NameServer::main() {
 	while (numRegistered < numVendingMachines) {
 		_Accept(VMregister) {
 			printer.print(Printer::Kind::NameServer, (char) States::Register, 
-						  machines[numRegistered - 1]->getId());
+						  machines.at(numRegistered - 1)->getId());
 		}
 	}
 
@@ -27,8 +26,12 @@ void NameServer::main() {
 			printer.print(Printer::Kind::NameServer, (char) States::Finished); 
 			break;
 		} or _Accept(getMachine) {
+			chosenMachine = machines.at(assignedMachines[studentId]); 	// choose next machine for student
+			assignedMachines[studentId] = (assignedMachines[studentId] + 1) 
+										  % numVendingMachines; 		// advance to next machine
 			printer.print(Printer::Kind::NameServer, States::NewVending, 
-						  (int) studentId, assignedMachine->getId() );
+						  (int) studentId, chosenMachine->getId() );
+			assigningCond.signalBlock();
 		} or _Accept(getMachineList);
 	}
 }
@@ -37,17 +40,16 @@ NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned
 	printer(prt), numVendingMachines(numVendingMachines), numStudents(numStudents), numRegistered(0) {}
 
 void NameServer::VMregister( VendingMachine * vendingmachine ) {
-	machines[numRegistered] = vendingmachine;
+	machines.at(numRegistered) = vendingmachine;
 	numRegistered += 1;
 }
 
 VendingMachine * NameServer::getMachine( unsigned int id ) {
-	assignedMachine = machines[ assignedMachines[id] ];
 	studentId = id;
-	assignedMachines[id] = (assignedMachines[id] + 1) % numVendingMachines; // advance to next machine
-	return assignedMachine;
+	assigningCond.wait();
+	return chosenMachine;
 }
 
 VendingMachine ** NameServer::getMachineList() {
-	return machines;
+	return &machines[0];
 }

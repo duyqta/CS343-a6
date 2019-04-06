@@ -118,14 +118,14 @@ _Task Groupoff {
 	unsigned int numStudents;
 	unsigned int sodaCost;
 	unsigned int groupoffDelay;
-	unsigned int cardCount;
+	unsigned int emptyCardCount;
 	uCondition cardCond;
+	void deleteUnusedCards(WATCard::FWATCard cards[], unsigned int cardCount);
 	void main();
 	enum States { Start = 'S', Deposit = 'D', Finished = 'F' };
   public:
 	Groupoff( Printer & prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay );
 	WATCard::FWATCard giftCard();
-	~Groupoff();
 };
 
 _Task VendingMachine;
@@ -135,9 +135,9 @@ _Task NameServer {
 	unsigned int numStudents;
 	unsigned int numRegistered;
 	unsigned int studentId;
-	VendingMachine ** machines;
-	unsigned int * assignedMachines;  // student i should use machines[ assignedMachines[i] ] next
-	VendingMachine * assignedMachine;
+	vector<VendingMachine *> machines;
+	VendingMachine * chosenMachine;
+	uCondition assigningCond;
 	void main();
 	enum States { Start = 'S', Register = 'R', NewVending = 'N', Finished = 'F' };
   public:

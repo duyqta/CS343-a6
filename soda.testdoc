@@ -1,0 +1,351 @@
+Case 1: ./soda soda.config 127 # soda.config contains the default values
+Output:
+Parent  Gropoff WATOff  Names   Truck   Plant   Stud0   Stud1   Mach0   Mach1   Mach2   Cour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+S       S       S       S                                                               S
+D0,1                    R0                                      S2
+D1,2                    R1                                              S2
+D1,1                    R2              S                                       S2
+D1,3            C0,5            S       G4      S0,2    S2,8                            t0,5
+D0,3            W       N0,0                    V0
+D1,2            C1,5    N1,1
+D1,3                                                    V1
+D0,3                            P4
+                                d0,4
+D1,2                            U0,16   P                       r                       T0,5
+                W               D0,0    G7                                              t1,5
+D1,1    D2              N1,2                                    R                       T1,5
+D0,3                            P7              B0,3    V2      B0,1
+D1,3                    N1,0    d1,7    P
+D1,1    D2                      U1,13   G5              V0      B0,0    r
+D1,2    F                       D1,0            G0,0                    R
+D1,1                            P5      P       F               B2,1
+                                d2,5    G4              G2,0
+D0,1                            U2,15                                           r
+D1,1                            D2,0                                            R
+D0,3                                                            B2,0
+D0,2                                                    B2,3
+D1,3                            P4
+D1,3                            d0,4    P
+D1,1                    N1,1    U0,16   G3              V1      r
+D1,3                            D0,0                            R
+D0,3
+D0,1                                                    A2,3
+D0,2                            P3
+                                d1,3
+D1,3                            U1,10   P
+D0,3                            D1,0    G4                              r
+D0,2                                                                    R
+D1,1                                                    B2,1            B2,4
+D1,2                            P4
+                                d2,4
+D1,3            T1,7            U2,11   P
+                                        G4                                      r       t1,7
+D0,2            W               D2,0                    L                       R       L1
+D0,1                            P4
+                                d0,4
+                                U0,12   P
+D1,2            C1,5            D0,0    G8                      r                       t1,5
+D1,2            W               P8                              R       B2,3            T1,5
+D1,3                            d1,8    P               B2,3
+D0,3                            U1,5    G7                              r
+D0,1                            D1,1                                    R
+D1,3                            d2,1
+D0,1                            U2,10                                   B2,4    r
+D1,1                            D2,0                    B2,1                    R
+                                P7
+                                d0,7
+                                U0,6    P
+D0,2                            D0,1    G7                      r
+                                d1,1
+D0,1                            U1,5                            R       r
+                                D1,0                                    R
+                                P7
+                                d2,7
+D0,3                            U2,5    P
+                                D2,2    G3                                      r
+                                d0,2
+D0,2            T1,7            U0,4                            r               R
+D0,2                            D0,0                                                    t1,7
+                                P3                              R                       T1,7
+                                d1,3
+                W               U1,4    P
+D0,1                            D1,2    G5                              r
+                                d2,2
+D1,3                            U2,5                                    R       r
+                                D2,2
+                                d0,2
+D0,2                            U0,2                            r               R
+D1,2                            D0,0                            R
+                                P5
+                                d1,5
+D0,3                            U1,1    P               A2,8
+                                D1,2    G5                              r
+                                d2,2
+D1,1                            U2,5                                    R       r
+                                D2,2
+                                d0,2
+D1,3                            U0,2                    B2,6    r       B2,3    R
+D1,2                            D0,2                    F       R
+D1,1
+D0,3
+D1,3                            F       F
+D1,3                                                            F
+D0,2                                                                    F
+D1,3                                                                            F
+D0,1                    F
+D0,3
+D0,2
+D1,2            F                                                                       F
+D0,1
+D1,1
+F
+***********************
+Assertions we made:
+
+The parent always gives an amount in the range [1, 3] to either student.
+
+The groupoff does not deliver more than 2 giftcards since there are 2 students.
+
+The watcard office creates a watcard with 5 dollars for each of the 2 students.  After 
+the watcard is lost by student 1 the office creates a new one with 5 dollars for student 1. 
+
+The nameserver prints each of the machines registering, it returns correct inital machines 
+to the students and it cycles through the machines properly for each student.  That is 
+student 1 is given machine 1 then 2 then 0.  
+
+The truck always picks up the number of bottles that the plant producded.  The amount of 
+bottles at the begining of a delivery is always less than or equal to the number at the end.  
+The truck cycles the vending machines in the order 0, 1, 2, 3,...
+
+The plant generates the same number of bottles as the truck picks up each run.  The number 
+of bottles generated in less than or equal to 12 which is the number of flavours times the 
+MaxShippedPerFlavour.
+
+The students each choose a valid flavour and a valid number bought.  They each buy the right 
+number of sodas of the flavour they chose. Before they buy any the get a vending machine.  
+Each student does not pay with a gift card more than once.  When student 1 loses a watcard
+they wait until the courier finishes the transfer to their new watcard.
+
+The machines all recieve a shipment before they sell any soda.  They also do not sell anything 
+during a delivery.  Each time a student prints a buy message the vending machine it bought from 
+prints a corresponding buy message.  
+
+The courier always starts a transfer before they end one.  Their transfer end messages match either 
+a transfer or create message from the watcard office.  The courier prints a lost message when 
+student 1 loses a watcard.
+
+
+Case 2: ./soda nonexistantfile 22 # nonexistantfile deos not exist
+Output:
+Error: could not open input file "nonexistantfile"
+
+
+Case 3: ./soda soda.config 0 
+Output:
+Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+
+
+Case 4: ./soda soda.config soda.config 33 33 
+Output:
+Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+
+
+Case 5: ./soda soda.config 122 # config has default values except it has 3 students, 2 machines and 2 couriers
+Output:
+Parent  Gropoff WATOff  Names   Truck   Plant   Stud0   Stud1   Stud2   Mach0   Mach1   Cour0   Cour1
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+S       S       S       S                                                               S       S
+D1,3                    R0                                              S2
+                        R1              S                                       S2
+D2,2                            S       G9      S1,8    S3,8    S2,2
+D2,1            C0,5                                                                    t0,5
+D2,1            W       N0,0    P9
+                                d0,9
+D2,2            C1,5            U0,11   P       V0                      r
+D0,2            W       N1,1    D0,0    G2              V1              R                       t1,5
+D2,1                            P2      P
+                C2,5    N2,0    d1,2    G7
+D1,2                            U1,18                           V0              r
+D0,2    D2                      D1,0                                            R
+                                P7
+D0,1                            d0,7    P       L               G2,0    B2,2            L0      T1,5
+D0,1    D2      W       N1,0    U0,6    G8                              r               t2,5
+D2,1            C0,5            D0,1                    V0              R               T2,5
+D0,2                            d1,1
+D2,2    D2      W               U1,17                           B2,3    B2,2    r               t0,5
+D0,3    F                       D1,0            G1,0            F       B1,2    R               T0,5
+D2,1                                                    B3,3            B3,4
+D1,1                            P8
+                                d0,8
+                                U0,3    P
+D2,1                            D0,2    G4                              r
+                                d1,2                                    R
+D2,2                            U1,15                                   B3,4    r
+D0,1                            D1,0                    G3,0                    R
+D1,3                                                                    B1,1
+D0,1                                            B1,3
+D2,1                                                                    B3,3
+D1,3                            P4                      B3,1
+                                d0,4    P
+D0,2                            U0,4    G2                              r
+D2,2                            D0,2
+                                d1,2
+D0,2                            U1,13                                   R       r
+D1,1            T1,7            D1,0                                            R       t1,7
+D1,3            W                               B1,1                    B1,0            T1,7
+D0,1
+D1,2                            P2
+                                d0,2    P
+D1,2                            U0,4    G4
+D2,1                            D0,1                                    r
+                                d1,1
+D0,3                            U1,12                   A3,8            R       r
+D0,1                            D1,0                                            R
+D0,1            T0,7            P4
+D0,2            W               d0,4    P                                                       t0,7
+D2,1                                    G8      B1,6    A3,8            B1,0                    T0,7
+D0,1                            U0,5                                    r
+D1,2                            D0,4
+                                d1,4
+D0,3                            U1,9                                    R       r
+                                D1,1                                            R
+                                P8
+                                d0,8
+D1,2                            U0,3    P
+                                D0,6    G3                              r
+D1,2                            d1,6                                    R
+D2,1                            U1,5                                            r
+D1,1                            D1,2                                    B1,1    R
+D2,1                                            B1,4    A3,8
+D1,1
+D2,2
+D0,1                            P3
+                                d0,3
+                                U0,3    P
+D1,1                            D0,2    G5                              r
+                                d1,2
+D1,1                            U1,5                                    R       r
+D1,3                            D1,2                    B3,6            B3,4    R
+D2,2                            P5      P
+D1,2                            d0,5    G3      B1,2                    B1,1
+D0,3                                                    B3,4            B3,3
+D2,2                                                    F
+D2,2                                            B1,0                    B1,0
+D2,3                            U0,7
+D2,1                            D0,5                                    r
+                                d1,5
+D0,2                            U1,5                                    R       r
+D2,1                            D1,5                                            R
+D2,1
+D2,3                            P3
+                T0,7            d0,3    P
+D0,2            W               U0,4    G3                              r               t0,7
+D0,2                            D0,0                                    R               T0,7
+D2,2                            P3      P
+                                d1,3    G5                              B1,2
+D1,1                            U1,4            B1,5                            r
+                                D1,2            F                               R
+D1,1                            d0,2
+D2,1                            U0,4                                    r
+D0,3                            D0,1                                    R
+D2,3                            F       F                               F
+D2,1                                                                            F
+D2,3                    F
+D0,3
+D0,3
+D1,3                                                                                            F
+D0,1            F                                                                       F
+D1,1
+D0,2
+F
+***********************
+
+Assertions we made:
+
+The nameserver assigns student 1, 2 and 3 the machines 0, 1, and 0 respectively.
+All students by the correct number of sodas.
+
+
+
+Case 6: ./soda soda.config 121 # config has default values except it has 5 machines
+Output:
+Parent  Gropoff WATOff  Names   Truck   Plant   Stud0   Stud1   Mach0   Mach1   Mach2   Mach3   Mach4   Cour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+S       S       S       S                                                                               S
+D1,2                    R0                                      S2
+D1,1                    R1                                              S2
+D1,1                    R2                                                      S2
+D1,2                    R3                                                              S2
+D1,3                    R4              S                                                       S2
+D0,1            C0,5            S       G5      S3,8    S0,5                                            t0,5
+D1,1            W       N0,0    P5
+                                d0,5
+                                U0,15   P       V0
+D0,2            C1,5            D0,0    G8                      r
+D1,3                    N1,1                            V1      R
+D0,1
+D0,3                                                                                                    T0,5
+                                                                                                        t1,5
+                                P8                                                                      T1,5
+D0,1            W               d1,8    P
+D0,3    D2              N1,2    U1,12   G9      B3,3    V2      B3,2
+D1,2                            D1,0                                    r
+D0,3                    N1,3                    B3,1    V3      B3,1    R
+D0,2                    N1,4
+D0,1    D2                                              V4
+D1,2    F                       P9                              B3,0
+                                d2,9
+                                U2,11   P       G3,0
+D0,2                    N1,0    D2,0    G6              V0                      r
+D1,2            T0,7            P6                                              R
+                                d3,6
+                                U3,14                                                                   t0,7
+D0,3                                    P                                                               T0,7
+D1,1            W               D3,0    G6              G0,0    B0,1                    r
+D1,2                                                                                    R
+D0,2                    N0,1                    V1
+D0,2                                            B3,6                    B3,1
+D0,1                            P6
+                                d4,6
+                                U4,14   P
+D0,1                            D4,0    G4              A0,5                                    r
+D1,3                                                                                            R
+D0,3                            P4
+                                d0,4    P                       B0,0
+D1,3                            U0,16   G1      B3,4    B0,3            B3,0
+D0,1                            D0,0                            r
+D1,1                                                            R
+D0,3                                                    B0,1    B0,0
+D1,1                    N0,2    P1
+                                d1,1
+D1,1                            U1,13   P       V2
+D0,3                            D1,0    G3      B3,2                    r       B3,2
+D0,1            T1,7                                                    R
+D0,2                                                                                                    t1,7
+D1,1            W                               B3,0                            B3,1                    T1,7
+D1,1                    N1,1    P3                      V1
+D0,2            T0,7            d2,3    P                               B0,1
+                                U2,10   G5                                                              t0,7
+                                                        B0,6                                            L0
+D0,3            W               D2,0            L       F                       r
+D1,2            C0,5                                                            R
+D1,2                                                                                                    t0,5
+D0,1            W                               B3,3                            B3,0                    T0,5
+D0,3                                            F
+D1,2                            F       F
+D1,3                                                            F
+D1,2                                                                    F
+D1,1                                                                            F
+D0,2                                                                                    F
+D1,2                                                                                            F
+D0,1                    F
+D1,3
+D0,3                                                                                                    F
+D0,1            F
+D0,2
+F
+***********************
+
+Assertions made:
+Both students bought the right number of sodas.

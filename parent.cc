@@ -11,8 +11,9 @@ void Parent::main() {
             break;
         } _Else {
             yield( parentalDelay );
-            unsigned int id = mprng( numStudents - 1 );
             unsigned int amount = mprng( 1, 3 );
+            unsigned int id = mprng( numStudents - 1 );
+            
             bank.deposit( id, amount );
             printer.print( Printer::Parent, ( char ) Parent::Deposit, (int) id, (int) amount);
         }

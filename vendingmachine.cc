@@ -2,7 +2,6 @@
 
 void VendingMachine::main() {
 	printer.print(Printer::Kind::Vending, id, (char) States::Start, (int) sodaCost);
-	nameServer.VMregister(this);
 	for (unsigned int i = 0; i < NUMFLAVOURS; i += 1) {
 		inv[i] = 0; // set inital inventory to 0 for all flavours
 	}
@@ -34,7 +33,9 @@ void VendingMachine::main() {
 }
 
 VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost ) :
-printer(prt), nameServer(nameServer), id(id), sodaCost(sodaCost) {}
+printer(prt), nameServer(nameServer), id(id), sodaCost(sodaCost) {
+	nameServer.VMregister(this);
+}
 
 void VendingMachine::buy( Flavours flavour, WATCard & card ) {
 	currFlavour = flavour;

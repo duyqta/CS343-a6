@@ -109,6 +109,8 @@ The groupoff does not deliver more than 2 giftcards since there are 2 students.
 
 The watcard office creates a watcard with 5 dollars for each of the 2 students.  After 
 the watcard is lost by student 1 the office creates a new one with 5 dollars for student 1. 
+Before the first transfer to student 1, that student had already bought 2 sodas which means 
+they only had 1 dollar left which is not enough for a soda.  
 
 The nameserver prints each of the machines registering, it returns correct inital machines 
 to the students and it cycles through the machines properly for each student.  That is 

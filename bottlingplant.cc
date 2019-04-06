@@ -6,14 +6,13 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
 				 unsigned int timeBetweenShipments ): 
         printer( prt ), nameServer( nameServer ), numVendingMachines( numVendingMachines ), 
         maxShippedPerFlavour( maxShippedPerFlavour ), maxStockPerFlavour( maxStockPerFlavour ),
-        timeBetweenShipments( timeBetweenShipments ), shutdown(false) {
-	// Create a truck
-    truck = new Truck( printer, nameServer, *this, numVendingMachines, maxStockPerFlavour );
-}
+        timeBetweenShipments( timeBetweenShipments ), shutdown(false) {}
 
 void BottlingPlant::main() {
 	// Bottling Plant starts 
 	printer.print( Printer::BottlingPlant, BottlingPlant::Start );
+    // Create a truck
+    Truck truck ( printer, nameServer, *this, numVendingMachines, maxStockPerFlavour );
 
 	// Initialize the stocks
 	for ( int i = 0; i < NUMFLAVOURS; i++ ) flavourStock[i] = 0;
@@ -34,7 +33,6 @@ void BottlingPlant::main() {
 			try {
             	_Accept( getShipment );				// Wait for last shipment call
 			} catch ( uMutexFailure::RendezvousFailure & ) {}
-            delete truck;							// Terminate truck
             break;
         } or _Accept( getShipment ) {				// Shipment picked up
 			printer.print( Printer::BottlingPlant, BottlingPlant::PickedUp );

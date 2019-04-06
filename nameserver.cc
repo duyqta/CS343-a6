@@ -31,7 +31,7 @@ void NameServer::main() {
 										  % numVendingMachines; 		// advance to next machine
 			printer.print(Printer::Kind::NameServer, States::NewVending, 
 						  (int) studentId, chosenMachine->getId() );
-			assigningCond.signalBlock();
+			assigningCond.signalBlock(); 	// wake up the student calling getMachine
 		} or _Accept(getMachineList);
 	}
 }
@@ -46,7 +46,7 @@ void NameServer::VMregister( VendingMachine * vendingmachine ) {
 
 VendingMachine * NameServer::getMachine( unsigned int id ) {
 	studentId = id;
-	assigningCond.wait();
+	assigningCond.wait(); 	// wait for the machine to be assigned
 	return chosenMachine;
 }
 

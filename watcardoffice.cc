@@ -68,22 +68,18 @@ void WATCardOffice::main() {
                 printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
                 jobRequested = false;
             }
+            continue;
         } or _Accept( create ) {
             printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::CreateCall, lastId, lastAmount);
-            // Wake up blocked couriers if there is any
-            if ( !requestWait.empty() ) {
-                requestWait.signalBlock();
-                printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
-                jobRequested = false;
-            }
         } or _Accept( transfer ) {
             printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::TransferCall, lastId, lastAmount);
-            // Wake up blocked couriers if there is any
-            if ( !requestWait.empty() ) {
-                requestWait.signalBlock();
-                printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
-                jobRequested = false;
-            }
+        }
+
+        // Wake up blocked couriers if there is any
+        if ( !requestWait.empty() ) {
+            requestWait.signalBlock();
+            printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::RequestWork );
+            jobRequested = false;
         }
     }
     printer.print( Printer::WATCardOffice, ( char ) WATCardOffice::Finished );
